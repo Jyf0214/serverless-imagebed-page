@@ -25,59 +25,46 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100%", overflow: "hidden" }}>
-      <Image src={DEFAULT_BG} alt="" fill unoptimized style={{ objectFit: "cover" }} />
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%)",
-      }} />
+    <div className="relative h-screen w-full overflow-hidden">
+      <Image
+        src={DEFAULT_BG}
+        alt=""
+        fill
+        unoptimized
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/60" />
 
-      <div style={{
-        position: "relative", zIndex: 10,
-        display: "flex", height: "100%",
-        flexDirection: "column", alignItems: "center", justifyContent: "center",
-        color: "#fff", fontFamily: "var(--font-nunito), sans-serif",
-      }}>
-        <h1 style={{
-          fontSize: 64, fontWeight: 800, margin: 0, letterSpacing: -1,
-          textShadow: "0 2px 24px rgba(0,0,0,0.25)",
-        }}>
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-white">
+        <h1 className="text-6xl font-extrabold tracking-tight drop-shadow-lg sm:text-7xl">
           {t.title}
         </h1>
-
-        <p style={{
-          fontSize: 18, marginTop: 12, fontWeight: 300,
-          color: "rgba(255,255,255,0.75)", letterSpacing: 3, textTransform: "uppercase",
-        }}>
+        <p className="mt-3 text-lg font-light uppercase tracking-[0.25em] text-white/60">
           {t.subtitle}
         </p>
 
-        <div style={{
-          marginTop: 48, display: "flex", gap: 32, fontSize: 14, fontWeight: 500,
-        }}>
-          <a href="/gallery" style={linkStyle}>{t.viewAll}</a>
-          <a href="/api/docs" style={linkStyle}>{t.apiDocs}</a>
+        <div className="mt-12 flex gap-8 text-sm font-medium">
+          <a
+            href="/gallery"
+            className="text-white/70 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white hover:decoration-white/40"
+          >
+            {t.viewAll}
+          </a>
+          <a
+            href="/api/docs"
+            className="text-white/70 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white hover:decoration-white/40"
+          >
+            {t.apiDocs}
+          </a>
         </div>
 
-        <div style={{
-          position: "absolute", bottom: 40,
-          display: "flex", alignItems: "center", gap: 8,
-          fontSize: 13, color: "rgba(255,255,255,0.5)",
-        }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#52c41a" }} />
+        <div className="absolute bottom-10 flex items-center gap-2 text-[13px] text-white/40">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
           <span>{t.status}</span>
-          <span style={{ margin: "0 4px", opacity: 0.4 }}>·</span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>{time}</span>
+          <span className="opacity-30">·</span>
+          <span className="tabular-nums">{time}</span>
         </div>
       </div>
     </div>
   );
 }
-
-const linkStyle: React.CSSProperties = {
-  color: "rgba(255,255,255,0.8)",
-  textDecoration: "none",
-  borderBottom: "1px solid rgba(255,255,255,0.25)",
-  paddingBottom: 2,
-  transition: "color 0.2s, border-color 0.2s",
-};
