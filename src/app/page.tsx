@@ -27,7 +27,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
+    <div className="relative h-screen w-full overflow-hidden">
       <Image
         src={DEFAULT_BG}
         alt=""
