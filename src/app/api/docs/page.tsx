@@ -43,7 +43,7 @@ function CopyButton({ text }: { text: string }) {
 
 export default function ApiDocsPage() {
   return (
-    <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-12 md:py-20">
+    <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-12 md:py-20 overflow-hidden">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <Link
           href="/"
@@ -69,13 +69,13 @@ export default function ApiDocsPage() {
         className="bg-white rounded-2xl border border-zinc-100 p-6 mb-6"
       >
         <h2 className="text-sm font-semibold text-zinc-900 mb-4">接口地址</h2>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600 border border-emerald-100">
             GET
           </span>
-          <code className="text-sm text-zinc-600 font-mono">{BASE}</code>
+          <code className="text-sm text-zinc-600 font-mono break-all">{BASE}</code>
           <span className="text-zinc-300">|</span>
-          <code className="text-sm text-zinc-600 font-mono">{BASE}/image</code>
+          <code className="text-sm text-zinc-600 font-mono break-all">{BASE}/image</code>
         </div>
       </motion.div>
 
@@ -89,7 +89,8 @@ export default function ApiDocsPage() {
         <div className="px-6 py-4 border-b border-zinc-50">
           <h2 className="text-sm font-semibold text-zinc-900">请求参数</h2>
         </div>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[480px]">
           <thead>
             <tr className="text-left text-zinc-400 text-xs uppercase tracking-wider border-b border-zinc-50">
               <th className="px-6 py-3 font-medium">参数</th>
@@ -111,6 +112,7 @@ export default function ApiDocsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </motion.div>
 
       {/* 调用示例 */}
@@ -129,9 +131,9 @@ export default function ApiDocsPage() {
               key={e.url}
               className="flex items-start justify-between gap-4 rounded-xl px-4 py-3 transition-colors hover:bg-zinc-50"
             >
-              <div className="min-w-0">
-                <code className="text-[13px] text-zinc-700 font-mono break-all">{e.url}</code>
-                <p className="mt-0.5 text-xs text-zinc-400">{e.desc}</p>
+              <div className="min-w-0 flex-1">
+                <code className="text-[13px] text-zinc-700 font-mono break-all leading-relaxed">{e.url}</code>
+                <p className="mt-1 text-xs text-zinc-400 break-words">{e.desc}</p>
               </div>
               <CopyButton text={e.url} />
             </div>
@@ -153,7 +155,7 @@ export default function ApiDocsPage() {
           <p className="text-sm text-zinc-500 mb-3">
             当 <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">mode=inline</code>（默认）时返回 JSON：
           </p>
-          <pre className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-[13px] text-zinc-600 font-mono overflow-auto">
+          <pre className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-[13px] text-zinc-600 font-mono break-all whitespace-pre-wrap">
 {`{
   "url": "https://example.com/image.jpg",
   "orientation": "h",
@@ -177,7 +179,7 @@ export default function ApiDocsPage() {
           <p className="text-sm text-zinc-500 mb-3">
             <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">{BASE}/image</code> 可直接用作 <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">&lt;img&gt;</code>，无需解析 JSON。
           </p>
-          <pre className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-[13px] text-zinc-600 font-mono overflow-auto">
+          <pre className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-[13px] text-zinc-600 font-mono break-all whitespace-pre-wrap">
 {`<img src="${BASE}/image?orientation=h&source=file" />`}
           </pre>
         </div>
