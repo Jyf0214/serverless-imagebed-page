@@ -1,27 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft, Copy, Check } from "lucide-react";
-import { useState } from "react";
 
-const BASE = "/api/random";
+const API_PATH = "/api/random";
 
-const params = [
+function getOrigin() {
+  if (typeof window === "undefined") return "";
+  try {
+    const o = window.location.origin;
+    if (o && !o.includes("localhost")) return o;
+  } catch {}
+  return "https://example.com";
+}
+
+const paramList = [
   { name: "orientation", values: "h / horizontal · v / vertical · （不传）", desc: "横图 / 竖图 / 随机" },
   { name: "source", values: "link · file · all（默认）", desc: "txt 链接 / 服务器文件 / 混合" },
   { name: "mode", values: "inline（默认）· redirect · image", desc: "JSON / 302 重定向 / 图片二进制" },
-];
-
-const examples = [
-  { url: `${BASE}`, desc: "随机图片，返回 JSON" },
-  { url: `${BASE}?orientation=h`, desc: "随机横图" },
-  { url: `${BASE}?orientation=v&mode=redirect`, desc: "竖图，302 重定向" },
-  { url: `${BASE}?source=link`, desc: "仅从 txt 链接中随机" },
-  { url: `${BASE}?source=file`, desc: "仅从服务器本地文件中随机" },
-  { url: `${BASE}?mode=image`, desc: "直接返回图片二进制" },
-  { url: `${BASE}/image`, desc: "快捷路径，直接返回图片" },
-  { url: `${BASE}/image?orientation=v&source=link`, desc: "返回 txt 中的随机竖图" },
 ];
 
 function CopyButton({ text }: { text: string }) {
@@ -42,6 +40,25 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export default function ApiDocsPage() {
+  const [origin, setOrigin] = useState("https://example.com");
+
+  useEffect(() => {
+    setOrigin(getOrigin());
+  }, []);
+
+  const api = `${origin}${API_PATH}`;
+
+  const examples = [
+    { url: api, desc: "随机图片，返回 JSON" },
+    { url: `${api}?orientation=h`, desc: "随机横图" },
+    { url: `${api}?orientation=v&mode=redirect`, desc: "竖图，302 重定向" },
+    { url: `${api}?source=link`, desc: "仅从 txt 链接中随机" },
+    { url: `${api}?source=file`, desc: "仅从服务器本地文件中随机" },
+    { url: `${api}?mode=image`, desc: "直接返回图片二进制" },
+    { url: `${api}/image`, desc: "快捷路径，直接返回图片" },
+    { url: `${api}/image?orientation=v&source=link`, desc: "返回 txt 中的随机竖图" },
+  ];
+
   return (
     <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-12 md:py-20 overflow-hidden">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -73,9 +90,9 @@ export default function ApiDocsPage() {
           <span className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600 border border-emerald-100">
             GET
           </span>
-          <code className="text-sm text-zinc-600 font-mono break-all">{BASE}</code>
+          <code className="text-sm text-zinc-600 font-mono break-all">{api}</code>
           <span className="text-zinc-300">|</span>
-          <code className="text-sm text-zinc-600 font-mono break-all">{BASE}/image</code>
+          <code className="text-sm text-zinc-600 font-mono break-all">{api}/image</code>
         </div>
       </motion.div>
 
@@ -99,7 +116,7 @@ export default function ApiDocsPage() {
             </tr>
           </thead>
           <tbody>
-            {params.map((p) => (
+            {paramList.map((p) => (
               <tr key={p.name} className="border-b border-zinc-50 last:border-0">
                 <td className="px-6 py-3">
                   <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">
@@ -177,10 +194,10 @@ export default function ApiDocsPage() {
         </div>
         <div className="p-6">
           <p className="text-sm text-zinc-500 mb-3">
-            <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">{BASE}/image</code> 可直接用作 <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">&lt;img&gt;</code>，无需解析 JSON。
+            <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">{api}/image</code> 可直接用作 <code className="rounded-md bg-zinc-50 px-2 py-0.5 text-xs font-mono text-zinc-700">&lt;img&gt;</code>，无需解析 JSON。
           </p>
           <pre className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 text-[13px] text-zinc-600 font-mono break-all whitespace-pre-wrap">
-{`<img src="${BASE}/image?orientation=h&source=file" />`}
+{`<img src="${api}/image?orientation=h&source=file" />`}
           </pre>
         </div>
       </motion.div>
