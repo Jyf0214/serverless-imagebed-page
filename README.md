@@ -2,6 +2,7 @@
 
 一个简洁的随机图片站点，支持横图 / 竖图筛选，图片来源支持 txt 链接、服务器本地文件或混合。
 
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository_url=https://github.com/Jyf0214/serverless-imagebed-page)
 
 ## 功能
 
