@@ -1,121 +1,94 @@
 "use client";
 
 import Link from "next/link";
-import { Typography, Table, Tag, Card, Button, Space } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-
-const { Title, Paragraph, Text } = Typography;
 
 const BASE = "/api/random";
 
-const dataSource = [
-  { key: "1", name: "orientation", val: "h / horizontal", desc: "横图" },
-  { key: "2", name: "orientation", val: "v / vertical", desc: "竖图" },
-  { key: "3", name: "orientation", val: "（不传）", desc: "随机" },
-  { key: "4", name: "source", val: "link", desc: "仅使用 txt 文件中的链接" },
-  { key: "5", name: "source", val: "file", desc: "仅使用服务器本地图片文件" },
-  { key: "6", name: "source", val: "all", desc: "链接 + 本地文件混合（默认）" },
-  { key: "7", name: "mode", val: "inline", desc: "返回 JSON，默认" },
-  { key: "8", name: "mode", val: "redirect", desc: "302 重定向到图片 URL" },
-  { key: "9", name: "mode", val: "image", desc: "直接返回图片二进制" },
-];
-
-const tableCols = [
-  {
-    title: "参数",
-    dataIndex: "name",
-    onCell: (record: any) => {
-      const idx = dataSource.findIndex((r) => r.key === record.key);
-      const prev = dataSource[idx - 1];
-      if (!prev || prev.name !== record.name) {
-        return { rowSpan: dataSource.filter((r) => r.name === record.name).length };
-      }
-      return { rowSpan: 0 };
-    },
-  },
-  { title: "可选值", dataIndex: "val", render: (v: string) => <Text code>{v}</Text> },
-  { title: "说明", dataIndex: "desc" },
+const params = [
+  { name: "orientation", values: "h / horizontal · v / vertical · （不传）", desc: "横图 / 竖图 / 随机" },
+  { name: "source", values: "link · file · all（默认）", desc: "txt 链接 / 服务器文件 / 混合" },
+  { name: "mode", values: "inline（默认）· redirect · image", desc: "JSON / 302 重定向 / 图片二进制" },
 ];
 
 const examples = [
-  { url: `${BASE}`, desc: "随机图片（全部来源），返回 JSON" },
-  { url: `${BASE}?orientation=h`, desc: "随机横图，返回 JSON" },
+  { url: `${BASE}`, desc: "随机图片，返回 JSON" },
+  { url: `${BASE}?orientation=h`, desc: "随机横图" },
   { url: `${BASE}?orientation=v&mode=redirect`, desc: "竖图，302 重定向" },
   { url: `${BASE}?source=link`, desc: "仅从 txt 链接中随机" },
   { url: `${BASE}?source=file`, desc: "仅从服务器本地文件中随机" },
-  { url: `${BASE}?source=file&orientation=v`, desc: "仅本地竖图" },
-  { url: `${BASE}?mode=image`, desc: "随机图片，直接返回图片" },
-  { url: `${BASE}/image`, desc: "直接返回随机图片（快捷路径）" },
-  { url: `${BASE}/image?orientation=v&source=link`, desc: "直接返回 txt 中的随机竖图" },
+  { url: `${BASE}?mode=image`, desc: "直接返回图片二进制" },
+  { url: `${BASE}/image`, desc: "快捷路径，直接返回图片" },
+  { url: `${BASE}/image?orientation=v&source=link`, desc: "返回 txt 中的随机竖图" },
 ];
 
 export default function ApiDocsPage() {
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "40px 24px" }}>
-      <Link href="/">
-        <Button type="link" icon={<ArrowLeftOutlined />} style={{ marginBottom: 24 }}>
-          返回首页
-        </Button>
+    <div className="mx-auto max-w-3xl px-6 py-12">
+      <Link
+        href="/"
+        className="mb-8 inline-block text-sm text-zinc-500 transition-colors hover:text-white"
+      >
+        ← 返回首页
       </Link>
 
-      <Title level={1}>随机一图 API</Title>
-      <Paragraph type="secondary" style={{ fontSize: 16 }}>
+      <h1 className="text-3xl font-bold tracking-tight">随机一图 API</h1>
+      <p className="mt-2 text-zinc-400">
         随机返回一张图片，支持横图 / 竖图筛选，图片来源支持 txt 链接、服务器本地文件或混合。
-      </Paragraph>
+      </p>
 
-      <Title level={3}>接口地址</Title>
-      <Card size="small">
-        <Space>
-          <Tag color="blue">GET</Tag>
-          <Text code>{BASE}</Text>
-          <Text type="secondary">|</Text>
-          <Text code>{BASE}/image</Text>
-        </Space>
-      </Card>
+      <div className="mt-8 rounded-xl border border-white/5 bg-zinc-900/50 px-4 py-3">
+        <span className="mr-3 rounded bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400">
+          GET
+        </span>
+        <code className="text-sm text-zinc-300">{BASE}</code>
+        <span className="mx-2 text-zinc-600">|</span>
+        <code className="text-sm text-zinc-300">{BASE}/image</code>
+      </div>
 
-      <Title level={3} style={{ marginTop: 32 }}>
-        请求参数
-      </Title>
-      <Table
-        dataSource={dataSource}
-        columns={tableCols}
-        pagination={false}
-        size="small"
-        bordered
-      />
+      <h3 className="mb-4 mt-10 text-lg font-semibold">请求参数</h3>
+      <div className="overflow-hidden rounded-xl border border-white/5">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-white/5 bg-zinc-900/50 text-left text-zinc-400">
+              <th className="px-4 py-3 font-medium">参数</th>
+              <th className="px-4 py-3 font-medium">可选值</th>
+              <th className="px-4 py-3 font-medium">说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            {params.map((p) => (
+              <tr key={p.name} className="border-b border-white/5 last:border-0">
+                <td className="px-4 py-3">
+                  <code className="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">
+                    {p.name}
+                  </code>
+                </td>
+                <td className="px-4 py-3 text-zinc-400">{p.values}</td>
+                <td className="px-4 py-3 text-zinc-500">{p.desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <Title level={3} style={{ marginTop: 32 }}>
-        调用示例
-      </Title>
-      <Space orientation="vertical" style={{ width: "100%" }} size="small">
+      <h3 className="mb-4 mt-10 text-lg font-semibold">调用示例</h3>
+      <div className="space-y-2">
         {examples.map((e) => (
-          <Card key={e.url} size="small">
-            <Space orientation="vertical" size={2}>
-              <Text code style={{ fontSize: 13 }}>
-                {e.url}
-              </Text>
-              <Text type="secondary">{e.desc}</Text>
-            </Space>
-          </Card>
+          <div
+            key={e.url}
+            className="rounded-lg border border-white/5 bg-zinc-900/30 px-4 py-3 transition-colors hover:border-white/10"
+          >
+            <code className="text-[13px] text-zinc-300">{e.url}</code>
+            <p className="mt-1 text-xs text-zinc-500">{e.desc}</p>
+          </div>
         ))}
-      </Space>
+      </div>
 
-      <Title level={3} style={{ marginTop: 32 }}>
-        响应示例
-      </Title>
-      <Paragraph type="secondary">
-        当 <Text code>mode=inline</Text>（默认）时返回 JSON：
-      </Paragraph>
-      <pre
-        style={{
-          background: "#141414",
-          color: "#e6e6e6",
-          padding: 16,
-          borderRadius: 8,
-          fontSize: 13,
-          overflow: "auto",
-        }}
-      >
+      <h3 className="mb-4 mt-10 text-lg font-semibold">响应示例</h3>
+      <p className="mb-3 text-sm text-zinc-400">
+        当 <code className="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">mode=inline</code>（默认）时返回 JSON：
+      </p>
+      <pre className="overflow-auto rounded-xl border border-white/5 bg-zinc-900/50 p-4 text-[13px] text-zinc-300">
 {`{
   "url": "https://images.unsplash.com/photo-xxx?w=1920&q=80",
   "orientation": "h",
@@ -123,22 +96,12 @@ export default function ApiDocsPage() {
 }`}
       </pre>
 
-      <Title level={3} style={{ marginTop: 32 }}>
-        直接图片路径
-      </Title>
-      <Paragraph type="secondary">
-        <Text code>{BASE}/image</Text> 可直接用作{" "}
-        <Text code>&lt;img src="..."&gt;</Text>，无需解析 JSON。
-      </Paragraph>
-      <pre
-        style={{
-          background: "#141414",
-          color: "#e6e6e6",
-          padding: 16,
-          borderRadius: 8,
-          fontSize: 13,
-        }}
-      >
+      <h3 className="mb-4 mt-10 text-lg font-semibold">直接图片路径</h3>
+      <p className="mb-3 text-sm text-zinc-400">
+        <code className="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">{BASE}/image</code> 可直接用作{" "}
+        <code className="rounded bg-white/5 px-1.5 py-0.5 text-zinc-300">&lt;img src=&quot;...&quot;&gt;</code>，无需解析 JSON。
+      </p>
+      <pre className="overflow-auto rounded-xl border border-white/5 bg-zinc-900/50 p-4 text-[13px] text-zinc-300">
 {`<img src="${BASE}/image?orientation=h&source=file" />`}
       </pre>
     </div>

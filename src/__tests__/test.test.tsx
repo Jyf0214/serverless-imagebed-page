@@ -172,17 +172,17 @@ describe("Gallery 客户端", () => {
 
   it("每页 12 张", () => {
     let r = render(<GalleryClient images={mockImages} page={1} />);
-    expect(document.querySelectorAll(".ant-card img").length).toBe(12);
+    expect(document.querySelectorAll('img[alt=""]').length).toBe(12);
     r.unmount();
     r = render(<GalleryClient images={mockImages} page={2} />);
-    expect(document.querySelectorAll(".ant-card img").length).toBe(12);
+    expect(document.querySelectorAll('img[alt=""]').length).toBe(12);
     r.unmount();
     r = render(<GalleryClient images={mockImages} page={3} />);
-    expect(document.querySelectorAll(".ant-card img").length).toBe(1);
+    expect(document.querySelectorAll('img[alt=""]').length).toBe(1);
   });
 
   it("页码", () => { render(<GalleryClient images={mockImages} page={1} />); expect(screen.getByText("第 1 / 3 页")).toBeInTheDocument(); });
-  it("上一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(document.querySelector('.ant-pagination-prev')).toBeInTheDocument(); });
-  it("下一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(document.querySelector('.ant-pagination-next')).toBeInTheDocument(); });
+  it("上一页", () => { render(<GalleryClient images={mockImages} page={2} />); expect(screen.getByText("上一页")).toBeInTheDocument(); });
+  it("下一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(screen.getByText("下一页")).toBeInTheDocument(); });
   it("空列表", () => { render(<GalleryClient images={[]} page={1} />); expect(screen.getByText("第 1 / 1 页")).toBeInTheDocument(); });
 });
