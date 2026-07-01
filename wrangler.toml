@@ -1,0 +1,7 @@
+name = "serverless-imagebed-page"
+compatibility_date = "2025-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".worker-static"
+binding = "ASSETS"
