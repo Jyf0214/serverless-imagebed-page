@@ -1,11 +1,11 @@
 @import "tailwindcss";
+@import "antd/dist/reset.css";
 
 @theme inline {
   --font-sans: var(--font-nunito);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body {
+  font-family: var(--font-nunito), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
 }

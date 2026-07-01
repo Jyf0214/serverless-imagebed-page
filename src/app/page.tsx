@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Button, Tag, Space, Typography } from "antd";
+import {
+  PictureOutlined,
+  FileTextOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 import { useLocale } from "@/i18n/useLocale";
+
+const { Title, Text } = Typography;
 
 const DEFAULT_BG = "https://bing.img.run/m.php";
 
@@ -25,37 +33,77 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      <Image src={DEFAULT_BG} alt="" fill unoptimized className="object-cover" />
-      <div className="absolute inset-0 bg-black/30" />
+    <div style={{ position: "relative", height: "100vh", width: "100%", overflow: "hidden" }}>
+      <Image src={DEFAULT_BG} alt="" fill unoptimized style={{ objectFit: "cover" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
-        <h1 className="text-6xl font-bold tracking-tight drop-shadow-lg">
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          height: "100%",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          color: "#fff",
+        }}
+      >
+        <Title
+          level={1}
+          style={{
+            color: "#fff",
+            fontSize: 56,
+            fontWeight: 700,
+            margin: 0,
+            textShadow: "0 2px 12px rgba(0,0,0,0.3)",
+          }}
+        >
           {t.title}
-        </h1>
-        <p className="mt-4 text-xl font-light tracking-wide opacity-90 drop-shadow">
+        </Title>
+
+        <Text
+          style={{
+            color: "rgba(255,255,255,0.85)",
+            fontSize: 20,
+            marginTop: 12,
+            fontWeight: 300,
+            letterSpacing: 2,
+          }}
+        >
           {t.subtitle}
-        </p>
-        <div className="mt-8 flex items-center gap-2 rounded-full bg-white/20 px-5 py-2 text-sm font-medium backdrop-blur-sm">
-          <span className="inline-block h-2 w-2 rounded-full bg-green-400" />
-          <span>{t.status}</span>
-          <span className="mx-2 opacity-40">|</span>
-          <span className="tabular-nums">{time}</span>
-        </div>
-        <div className="mt-6 flex gap-3">
-          <a
+        </Text>
+
+        <Space style={{ marginTop: 32 }} size="middle">
+          <Tag icon={<ClockCircleOutlined />} color="success" style={{ fontSize: 14, padding: "4px 12px" }}>
+            {t.status}
+          </Tag>
+          <Tag style={{ fontSize: 14, padding: "4px 12px", background: "rgba(255,255,255,0.15)", border: "none", color: "#fff" }}>
+            {time}
+          </Tag>
+        </Space>
+
+        <Space style={{ marginTop: 32 }} size="middle">
+          <Button
+            shape="round"
+            size="large"
+            icon={<PictureOutlined />}
             href="/gallery"
-            className="rounded-full border border-white/30 px-5 py-2 text-sm font-medium transition-colors hover:bg-white/10"
+            style={{ borderColor: "rgba(255,255,255,0.4)", color: "#fff", background: "rgba(255,255,255,0.1)" }}
           >
             {t.viewAll}
-          </a>
-          <a
+          </Button>
+          <Button
+            shape="round"
+            size="large"
+            icon={<FileTextOutlined />}
             href="/api/docs"
-            className="rounded-full border border-white/30 px-5 py-2 text-sm font-medium transition-colors hover:bg-white/10"
+            style={{ borderColor: "rgba(255,255,255,0.4)", color: "#fff", background: "rgba(255,255,255,0.1)" }}
           >
             {t.apiDocs}
-          </a>
-        </div>
+          </Button>
+        </Space>
       </div>
     </div>
   );

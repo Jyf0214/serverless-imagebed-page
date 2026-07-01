@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { ConfigProvider, Button, theme } from "antd";
+import { GlobalOutlined } from "@ant-design/icons";
 import { type Locale, getTranslations } from "@/i18n/dict";
 import { LocaleContext } from "@/i18n/useLocale";
 
@@ -21,13 +23,33 @@ export default function RootProvider({
 
   return (
     <LocaleContext.Provider value={{ locale, t: getTranslations(locale) }}>
-      <button
-        onClick={toggle}
-        className="fixed right-5 top-5 z-20 rounded-full border border-white/30 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-white/10"
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          token: {
+            colorPrimary: "#1677ff",
+            borderRadius: 8,
+            fontFamily: "var(--font-nunito), -apple-system, sans-serif",
+          },
+        }}
       >
-        {getTranslations(locale).lang}
-      </button>
-      {children}
+        <Button
+          type="text"
+          icon={<GlobalOutlined />}
+          onClick={toggle}
+          style={{
+            position: "fixed",
+            right: 20,
+            top: 20,
+            zIndex: 100,
+            color: "#fff",
+            borderColor: "rgba(255,255,255,0.3)",
+          }}
+        >
+          {getTranslations(locale).lang}
+        </Button>
+        {children}
+      </ConfigProvider>
     </LocaleContext.Provider>
   );
 }

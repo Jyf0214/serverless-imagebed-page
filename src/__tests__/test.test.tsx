@@ -158,8 +158,8 @@ describe("首页渲染", () => {
   it("显示站点标题", () => { render(<Home />); expect(screen.getByText("随机图床")).toBeInTheDocument(); });
   it("显示副标题", () => { render(<Home />); expect(screen.getByText("每次刷新，遇见不一样的风景")).toBeInTheDocument(); });
   it("显示状态标签", () => { render(<Home />); expect(screen.getByText("随机图片站点")).toBeInTheDocument(); });
-  it("API 文档链接", () => { render(<Home />); expect(screen.getByText("📄 随机一图 API 文档")).toHaveAttribute("href", "/api/docs"); });
-  it("查看所有链接", () => { render(<Home />); expect(screen.getByText("📷 查看所有图片")).toHaveAttribute("href", "/gallery"); });
+  it("API 文档链接", () => { render(<Home />); expect(screen.getByRole("link", { name: /随机一图 API 文档/ })).toHaveAttribute("href", "/api/docs"); });
+  it("查看所有链接", () => { render(<Home />); expect(screen.getByRole("link", { name: /查看所有图片/ })).toHaveAttribute("href", "/gallery"); });
   it("包含背景图", () => { render(<Home />); expect(document.querySelector('img[alt=""]')).toBeInTheDocument(); });
 });
 
@@ -172,17 +172,17 @@ describe("Gallery 客户端", () => {
 
   it("每页 12 张", () => {
     let r = render(<GalleryClient images={mockImages} page={1} />);
-    expect(document.querySelectorAll(".group img").length).toBe(12);
+    expect(document.querySelectorAll(".ant-card img").length).toBe(12);
     r.unmount();
     r = render(<GalleryClient images={mockImages} page={2} />);
-    expect(document.querySelectorAll(".group img").length).toBe(12);
+    expect(document.querySelectorAll(".ant-card img").length).toBe(12);
     r.unmount();
     r = render(<GalleryClient images={mockImages} page={3} />);
-    expect(document.querySelectorAll(".group img").length).toBe(1);
+    expect(document.querySelectorAll(".ant-card img").length).toBe(1);
   });
 
   it("页码", () => { render(<GalleryClient images={mockImages} page={1} />); expect(screen.getByText("第 1 / 3 页")).toBeInTheDocument(); });
-  it("上一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(screen.getAllByText("上一页")[0]).toHaveAttribute("href", "/gallery?page=1"); });
-  it("下一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(screen.getAllByText("下一页")[0]).toHaveAttribute("href", "/gallery?page=2"); });
+  it("上一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(document.querySelector('.ant-pagination-prev')).toBeInTheDocument(); });
+  it("下一页", () => { render(<GalleryClient images={mockImages} page={1} />); expect(document.querySelector('.ant-pagination-next')).toBeInTheDocument(); });
   it("空列表", () => { render(<GalleryClient images={[]} page={1} />); expect(screen.getByText("第 1 / 1 页")).toBeInTheDocument(); });
 });

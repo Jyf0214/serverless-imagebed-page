@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { Row, Col, Card, Pagination, Typography, Empty, Space } from "antd";
 import { useLocale } from "@/i18n/useLocale";
 import type { ImageItem } from "@/lib/images";
 
+const { Title } = Typography;
 const PER_PAGE = 12;
 
 export default function GalleryClient({
@@ -19,42 +21,53 @@ export default function GalleryClient({
   const slice = images.slice(start, start + PER_PAGE);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="mb-8 text-3xl font-bold">{t.galleryTitle}</h1>
+    <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px" }}>
+      <Title level={2} style={{ marginBottom: 32 }}>
+        {t.galleryTitle}
+      </Title>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-        {slice.map((img) => (
-          <div key={img.url} className="group relative aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-            <Image
-              src={img.url}
-              alt=""
-              fill
-              unoptimized
-              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          </div>
-        ))}
-      </div>
+      {slice.length === 0 ? (
+        <Empty description="暂无图片" />
+      ) : (
+        <Row gutter={[16, 16]}>
+          {slice.map((img) => (
+            <Col key={img.url} xs={12} sm={8} md={6}>
+              <Card
+                hoverable
+                cover={
+                  <div style={{ position: "relative", aspectRatio: "1/1", overflow: "hidden" }}>
+                    <Image
+                      src={img.url}
+                      alt=""
+                      fill
+                      unoptimized
+                      sizes="(max-width: 576px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                }
+                styles={{ body: { padding: 0 } }}
+                style={{ borderRadius: 8, overflow: "hidden" }}
+              />
+            </Col>
+          ))}
+        </Row>
+      )}
 
-      {/* 分页 */}
-      <div className="mt-8 flex items-center justify-center gap-4 text-sm">
-        <a
-          href={`/gallery?page=${Math.max(1, page - 1)}`}
-          className={`rounded-full border px-4 py-1.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 ${page <= 1 ? "pointer-events-none opacity-30" : ""}`}
-        >
-          {t.prev}
-        </a>
-        <span className="text-zinc-500">
+      <Space orientation="vertical" align="center" style={{ width: "100%", marginTop: 32 }} size="middle">
+        <Typography.Text type="secondary">
           {t.page.replace("{cur}", String(page)).replace("{total}", String(total))}
-        </span>
-        <a
-          href={`/gallery?page=${Math.min(total, page + 1)}`}
-          className={`rounded-full border px-4 py-1.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 ${page >= total ? "pointer-events-none opacity-30" : ""}`}
-        >
-          {t.next}
-        </a>
-      </div>
+        </Typography.Text>
+        <Pagination
+          current={page}
+          total={images.length}
+          pageSize={PER_PAGE}
+          showSizeChanger={false}
+          onChange={(p) => {
+            window.location.href = `/gallery?page=${p}`;
+          }}
+        />
+      </Space>
     </div>
   );
 }
