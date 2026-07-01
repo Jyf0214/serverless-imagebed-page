@@ -25,7 +25,7 @@ export default function RootProvider({
 
   return (
     <LocaleContext.Provider value={{ locale, t }}>
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/60 dark:bg-zinc-900/60">
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/60 border-b border-zinc-100 dark:bg-zinc-900/60 dark:border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="font-bold text-lg tracking-tight text-zinc-900 dark:text-zinc-100">
             {t.title}
@@ -39,10 +39,10 @@ export default function RootProvider({
             </Link>
             <button
               onClick={toggle}
-              className="inline-flex items-center gap-1 text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-zinc-700 dark:hover:text-zinc-200 transition-all cursor-pointer shadow-sm"
+              title={t.lang}
             >
               <Globe size={14} />
-              {t.lang}
             </button>
           </div>
         </div>
