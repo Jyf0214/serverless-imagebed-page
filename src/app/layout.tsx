@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import { Nunito } from "next/font/google";
 import { type Locale } from "@/i18n/dict";
 import RootProvider from "@/i18n/RootProvider";
-import Footer from "@/components/Footer";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -26,11 +25,8 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={`${nunito.variable} h-full`}>
-      <body className="min-h-full flex flex-col">
-        <RootProvider locale={locale}>
-          {children}
-          <Footer />
-        </RootProvider>
+      <body className="min-h-full">
+        <RootProvider locale={locale}>{children}</RootProvider>
       </body>
     </html>
   );
