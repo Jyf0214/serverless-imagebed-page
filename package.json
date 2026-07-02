@@ -13,7 +13,7 @@
     "preview:cf": "npx wrangler pages dev .worker-static --compatibility-flag=nodejs_compat",
     "start": "next start",
     "test": "vitest run",
-    "lint": "eslint"
+    "lint": "eslint --max-warnings 0"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.2",

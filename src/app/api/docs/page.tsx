@@ -43,6 +43,7 @@ export default function ApiDocsPage() {
   const [origin, setOrigin] = useState("https://example.com");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(getOrigin());
   }, []);
 
