@@ -1,4 +1,5 @@
 {
+  "outputDirectory": ".next/standalone",
   "headers": [
     {
       "for": "/images/**",
