@@ -1,11 +1,12 @@
 {
-  "outputDirectory": ".next/standalone",
-  "headers": [
-    {
-      "for": "/images/**",
-      "values": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+  "headers": {
+    "source": {
+      "/images/*": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
-  ]
+  }
 }
