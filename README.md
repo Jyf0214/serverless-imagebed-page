@@ -12,6 +12,7 @@
 - 自动生成图片元数据与缩略图
 - 中英文双语切换
 - 响应式设计
+- WebDAV 图片同步（构建前自动下载）
 
 ## 技术栈
 
@@ -20,6 +21,7 @@
 - motion (Framer Motion)
 - lucide-react
 - sharp (缩略图生成)
+- webdav (WebDAV 客户端)
 - Vitest + @testing-library/react
 
 ## 本地开发
@@ -51,12 +53,29 @@ npm run dev
 │   ├── components/
 │   └── i18n/                  # 国际化
 ├── scripts/
+│   ├── sync-webdav.mjs        # WebDAV 图片同步
 │   ├── generate-metadata.mjs  # 元数据生成
 │   └── generate-thumbs.mjs    # 缩略图生成
+├── .git/hooks/
+│   ├── pre-commit             # 提交前 ESLint 检查
+│   └── pre-push               # 推送前运行测试
 └── edgeone.json               # EdgeOne 缓存配置
 ```
 
 ## 添加图片
+
+### WebDAV 自动同步（推荐）
+
+配置环境变量后，构建时会自动从 WebDAV 服务器下载图片到 `images/` 目录：
+
+```bash
+WEBDAV_URL=https://your-server.com/dav \
+WEBDAV_USER=admin \
+WEBDAV_PASS=xxx \
+npm run build
+```
+
+支持增量下载，只同步新增的图片，跳过已存在的文件。
 
 ### 链接方式
 
@@ -128,9 +147,11 @@ API Token 在 EdgeOne 控制台 → 项目设置 → API Token 中获取。
 ## 构建命令
 
 ```bash
-npm run build       # 完整构建
+npm run build       # 完整构建（含 WebDAV 同步）
+npm run sync        # 仅同步 WebDAV 图片
 npm run metadata    # 仅生成元数据
 npm run thumbs      # 仅生成缩略图
+npm run lint        # ESLint 检查
 npm run test        # 运行测试
 ```
 
