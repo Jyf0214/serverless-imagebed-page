@@ -7,7 +7,7 @@
  * 为每个尺寸生成缩略图到 images/thumbs/{orientation}/{W}x{H}/
  */
 
-import { readFileSync, readdirSync, mkdirSync } from "fs";
+import { readFileSync, mkdirSync } from "fs";
 import { join, extname, basename } from "path";
 import sharp from "sharp";
 
@@ -15,8 +15,6 @@ const ROOT = process.cwd();
 const SRC_DIR = join(ROOT, "images");
 const THUMB_DIR = join(SRC_DIR, "thumbs");
 const PUBLIC = join(ROOT, "public", "images");
-
-const IMAGE_EXTS = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif"]);
 
 const SIZES = [
   [100, 100], [150, 150], [200, 200],

@@ -6,7 +6,10 @@ afterEach(() => cleanup());
 
 // ── mock next/image ────────────────────────────────────
 vi.mock("next/image", () => ({
-  default: (props: any) => <img {...props} />,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img {...props} alt={props.alt ?? ""} />
+  ),
 }));
 
 vi.mock("next/font/google", () => ({

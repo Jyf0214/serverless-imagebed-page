@@ -9,12 +9,13 @@ vi.mock("motion/react", () => ({
     {},
     {
       get: (_, tag: string) => {
-        const Component = ({ children, initial, animate, transition, exit, whileHover, ...props }: any) =>
+        const Component = ({ children, ...props }: Record<string, unknown>) =>
           React.createElement(tag, props, children);
         Component.displayName = `motion.${tag}`;
         return Component;
       },
     }
   ),
-  AnimatePresence: ({ children }: any) => React.createElement(React.Fragment, null, children),
+  AnimatePresence: ({ children }: { children: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children),
 }));
