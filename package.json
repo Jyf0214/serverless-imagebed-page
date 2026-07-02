@@ -3,12 +3,13 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
+    "sync": "node scripts/sync-webdav.mjs",
     "metadata": "node scripts/generate-metadata.mjs",
     "thumbs": "node scripts/generate-thumbs.mjs",
-    "prebuild": "mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && npm run thumbs",
-    "dev": "mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && next dev",
+    "prebuild": "npm run sync && mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && npm run thumbs",
+    "dev": "npm run sync && mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && next dev",
     "build": "next build",
-    "build:cf": "mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && npm run thumbs && npx @opennextjs/cloudflare build",
+    "build:cf": "npm run sync && mkdir -p public/images && cp -r images/. public/images/ && npm run metadata && npm run thumbs && npx @opennextjs/cloudflare build",
     "preview:cf": "npx wrangler pages dev .worker-static --compatibility-flag=nodejs_compat",
     "start": "next start",
     "test": "vitest run",
@@ -22,7 +23,8 @@
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sharp": "^0.35.2"
+    "sharp": "^0.35.2",
+    "webdav": "^5.10.0"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.1",
