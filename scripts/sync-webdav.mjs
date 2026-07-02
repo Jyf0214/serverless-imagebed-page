@@ -7,6 +7,7 @@
  *   WEBDAV_URL  - WebDAV 服务器地址（必需）
  *   WEBDAV_USER - 用户名（必需）
  *   WEBDAV_PASS - 密码（必需）
+ *   WEBDAV_DIR  - 远程图片目录，默认 "/"（可选）
  *
  * 无环境变量时静默跳过，不阻塞本地开发。
  * 增量下载：跳过本地已存在的文件。
@@ -29,6 +30,7 @@ const IMAGE_EXTS = new Set([
 const url = process.env.WEBDAV_URL;
 const user = process.env.WEBDAV_USER;
 const pass = process.env.WEBDAV_PASS;
+const remoteDir = process.env.WEBDAV_DIR || "/";
 
 if (!url || !user || !pass) {
   console.log("[sync-webdav] 未配置 WEBDAV 环境变量，跳过同步");
@@ -71,11 +73,11 @@ async function listAllImages(client, dirPath) {
 // ── 主流程 ────────────────────────────────────────────
 
 async function main() {
-  console.log(`[sync-webdav] 连接 ${url}`);
+  console.log(`[sync-webdav] 连接 ${url}，目录: ${remoteDir}`);
 
   const client = createClient(url, { username: user, password: pass });
 
-  const remoteFiles = await listAllImages(client, "/");
+  const remoteFiles = await listAllImages(client, remoteDir);
   console.log(`[sync-webdav] 远程发现 ${remoteFiles.length} 张图片`);
 
   const localFiles = getLocalFiles(DEST);

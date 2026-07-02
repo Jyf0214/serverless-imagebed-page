@@ -72,10 +72,28 @@ npm run dev
 WEBDAV_URL=https://your-server.com/dav \
 WEBDAV_USER=admin \
 WEBDAV_PASS=xxx \
+WEBDAV_DIR=/ \
 npm run build
 ```
 
+| 环境变量 | 说明 | 默认值 |
+|----------|------|--------|
+| `WEBDAV_URL` | WebDAV 服务器地址 | （必填） |
+| `WEBDAV_USER` | 用户名 | （必填） |
+| `WEBDAV_PASS` | 密码 | （必填） |
+| `WEBDAV_DIR` | 远程图片目录 | `/` |
+
 支持增量下载，只同步新增的图片，跳过已存在的文件。
+
+#### Koofr 配置示例
+
+```bash
+WEBDAV_URL=https://app.koofr.net/dav/ \
+WEBDAV_USER=your-email@example.com \
+WEBDAV_PASS=your-password \
+WEBDAV_DIR=/Koofr/images \
+npm run build
+```
 
 ### 链接方式
 
