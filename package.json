@@ -1,6 +1,6 @@
 {
   "name": "serverless-imagebed-page",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "sync": "node scripts/sync-webdav.mjs",
