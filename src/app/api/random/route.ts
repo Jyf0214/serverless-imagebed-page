@@ -21,12 +21,15 @@ export async function GET(request: NextRequest) {
 
   const mode = searchParams.get("mode");
 
-  if (mode === "redirect") {
-    return NextResponse.redirect(url, 302);
-  }
+  if (mode === "redirect" || mode === "image") {
+    const origin = request.nextUrl.origin;
+    const absoluteUrl = new URL(url, origin).toString();
 
-  if (mode === "image") {
-    const res = await fetch(url);
+    if (mode === "redirect") {
+      return NextResponse.redirect(absoluteUrl, 302);
+    }
+
+    const res = await fetch(absoluteUrl);
     const contentType = res.headers.get("content-type") ?? "image/jpeg";
     const body = await res.arrayBuffer();
     return new NextResponse(body, {
