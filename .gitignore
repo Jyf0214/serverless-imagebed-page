@@ -20,6 +20,12 @@
 # production
 /build
 
+# astro
+/.astro/
+
+# next build output
+/dist/
+
 # misc
 .DS_Store
 *.pem
