@@ -56,13 +56,13 @@ yarn-error.log*
 /images/thumbs
 
 # image files (synced from WebDAV, not tracked in git)
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.webp
-*.bmp
-*.svg
+**/*.jpg
+**/*.jpeg
+**/*.png
+**/*.gif
+**/*.webp
+**/*.bmp
+**/*.svg
 
 # typescript
 *.tsbuildinfo
