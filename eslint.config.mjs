@@ -14,6 +14,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "node_modules/**",
     ".edgeone/**",
+    // Generated / copied assets:
+    "dist/**",
+    ".astro/**",
+    "public/**",
   ]),
 ]);
 

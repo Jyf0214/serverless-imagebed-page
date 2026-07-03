@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
 
   const orientation = searchParams.get("orientation");
   const source = (searchParams.get("source") ?? "all") as Source;
-  const url = pick(resolvePool(orientation, source));
+  const raw = pick(resolvePool(orientation, source));
+  const url = new URL(raw, request.nextUrl.origin).toString();
 
   const res = await fetch(url);
   const contentType = res.headers.get("content-type") ?? "image/jpeg";
