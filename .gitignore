@@ -55,12 +55,14 @@ yarn-error.log*
 # generated thumbnails
 /images/thumbs
 
-# synced source images (from WebDAV)
-/images/*.jpg
-/images/*.jpeg
-/images/*.png
-/images/*.gif
-/images/*.webp
+# image files (synced from WebDAV, not tracked in git)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.svg
 
 # typescript
 *.tsbuildinfo
