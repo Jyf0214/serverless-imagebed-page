@@ -15,6 +15,22 @@ const ROOT = process.cwd();
 const SRC_DIR = join(ROOT, "images");
 const THUMB_DIR = join(SRC_DIR, "thumbs");
 const PUBLIC = join(ROOT, "public", "images");
+const CONCURRENCY = parseInt(process.env.THUMB_CONCURRENCY || "8", 10);
+const MAX_RETRIES = parseInt(process.env.THUMB_RETRIES || "2", 10);
+const RETRY_DELAY_MS = 500;
+
+async function retry(fn, label, maxRetries = MAX_RETRIES) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt === maxRetries) throw err;
+      const delay = RETRY_DELAY_MS * attempt;
+      console.log(`  ⏳ ${label} 第${attempt}次失败，${delay}ms 后重试...`);
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+}
 
 const SIZES = [
   [100, 100], [150, 150], [200, 200],
@@ -53,12 +69,14 @@ async function generate() {
   }
 
   console.log(
-    `找到 ${hImages.length} 张横图 + ${vImages.length} 张竖图，开始生成 ${SIZES.length} 种尺寸...\n`
+    `找到 ${hImages.length} 张横图 + ${vImages.length} 张竖图，开始生成 ${SIZES.length} 种尺寸...`
   );
+  console.log(`并发数: ${CONCURRENCY}\n`);
 
   let total = 0;
+  let failed = 0;
 
-  for (const { path: imgPath, orientation } of all) {
+  async function processOne({ path: imgPath, orientation }) {
     const fullPath = join(ROOT, imgPath);
     const ext = extname(imgPath).toLowerCase();
     const name = basename(imgPath, ext);
@@ -70,7 +88,7 @@ async function generate() {
 
       const outPath = join(dir, `${name}${outExt}`);
 
-      try {
+      await retry(async () => {
         await sharp(fullPath)
           .resize(w, h, {
             fit: "contain",
@@ -78,16 +96,29 @@ async function generate() {
           })
           .toFormat(outExt === ".jpg" ? "jpeg" : "webp", { quality: QUALITY })
           .toFile(outPath);
-        total++;
-      } catch (err) {
-        console.error(`  ✗ ${imgPath} → ${w}x${h} 失败:`, err.message);
-      }
+      }, `${name} ${w}x${h}`);
+      total++;
     }
 
     console.log(`  ✓ [${orientation}] ${imgPath}`);
   }
 
-  console.log(`\n完成！共生成 ${total} 张缩略图。`);
+  // 并发池
+  const queue = [...all];
+  const workers = Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
+    while (queue.length > 0) {
+      const item = queue.shift();
+      try {
+        await processOne(item);
+      } catch (err) {
+        failed++;
+        console.error(`  ✗ ${item.path} 失败: ${err.message}`);
+      }
+    }
+  });
+  await Promise.all(workers);
+
+  console.log(`\n完成！共生成 ${total} 张缩略图，失败 ${failed} 张。`);
   console.log(`输出：${THUMB_DIR}/{h|v}/{W}x{H}/`);
 }
 

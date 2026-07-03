@@ -20,6 +20,22 @@ import { pipeline } from "stream/promises";
 
 const ROOT = process.cwd();
 const DEST = join(ROOT, "images");
+const CONCURRENCY = parseInt(process.env.SYNC_CONCURRENCY || "6", 10);
+const MAX_RETRIES = parseInt(process.env.SYNC_RETRIES || "3", 10);
+const RETRY_DELAY_MS = 1000;
+
+async function retry(fn, label, maxRetries = MAX_RETRIES) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt === maxRetries) throw err;
+      const delay = RETRY_DELAY_MS * attempt;
+      console.log(`[sync-webdav] ⏳ ${label} 第${attempt}次失败，${delay}ms 后重试...`);
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+}
 
 const IMAGE_EXTS = new Set([
   ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tiff", ".tif",
@@ -84,24 +100,45 @@ async function main() {
 
   let downloaded = 0;
   let skipped = 0;
+  let failed = 0;
 
-  for (const file of remoteFiles) {
-    const name = file.basename;
-
-    if (localFiles.has(name)) {
+  const toDownload = remoteFiles.filter((file) => {
+    if (localFiles.has(file.basename)) {
       skipped++;
-      continue;
+      return false;
     }
+    return true;
+  });
 
-    const readable = await client.createReadStream(file.filename);
-    const writable = createWriteStream(join(DEST, name));
-    await pipeline(readable, writable);
+  console.log(`[sync-webdav] 需下载 ${toDownload.length} 张，并发数: ${CONCURRENCY}`);
+
+  async function downloadOne(file) {
+    await retry(async () => {
+      const readable = await client.createReadStream(file.filename);
+      const writable = createWriteStream(join(DEST, file.basename));
+      await pipeline(readable, writable);
+    }, file.basename);
     downloaded++;
-    console.log(`[sync-webdav] 下载: ${name}`);
+    console.log(`[sync-webdav] ✓ ${file.basename}`);
   }
 
+  // 并发池
+  const queue = [...toDownload];
+  const workers = Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
+    while (queue.length > 0) {
+      const file = queue.shift();
+      try {
+        await downloadOne(file);
+      } catch (err) {
+        failed++;
+        console.error(`[sync-webdav] ✗ ${file.basename}: ${err.message}`);
+      }
+    }
+  });
+  await Promise.all(workers);
+
   console.log(
-    `[sync-webdav] 完成：下载 ${downloaded} 张，跳过 ${skipped} 张`
+    `[sync-webdav] 完成：下载 ${downloaded} 张，跳过 ${skipped} 张，失败 ${failed} 张`
   );
 }
 
