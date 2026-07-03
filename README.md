@@ -82,8 +82,10 @@ npm run build
 | `WEBDAV_USER` | 用户名 | （必填） |
 | `WEBDAV_PASS` | 密码 | （必填） |
 | `WEBDAV_DIR` | 远程图片目录 | `/` |
+| `SYNC_CONCURRENCY` | 并发下载数 | `6` |
+| `SYNC_RETRIES` | 失败重试次数 | `3` |
 
-支持增量下载，只同步新增的图片，跳过已存在的文件。
+支持增量下载，只同步新增的图片，跳过已存在的文件。下载失败时自动重试（递增延迟）。
 
 #### Koofr 配置示例
 
@@ -108,6 +110,13 @@ echo "https://example.com/photo.jpg" >> images/horizontal.txt
 将图片放入 `images/` 目录，构建时自动检测横竖屏并归类。
 
 支持格式：`.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.bmp`, `.tiff`
+
+缩略图生成默认 8 并发，可通过环境变量调整：
+
+| 环境变量 | 说明 | 默认值 |
+|----------|------|--------|
+| `THUMB_CONCURRENCY` | 并发生成数 | `8` |
+| `THUMB_RETRIES` | 失败重试次数 | `2` |
 
 ## API
 
