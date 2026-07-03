@@ -1,0 +1,1 @@
+import{o as e,t}from"./react.D7Q68MmV.js";var n=e(t()),r=(0,n.createContext)({locale:`zh`,t:{}}),i=()=>(0,n.useContext)(r);export{i as t};
