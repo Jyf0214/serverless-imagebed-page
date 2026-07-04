@@ -15,7 +15,7 @@ const ROOT = process.cwd();
 const SRC_DIR = join(ROOT, "images");
 const THUMB_DIR = join(SRC_DIR, "thumbs");
 const PUBLIC = join(ROOT, "public", "images");
-const ENABLE_THUMBS = process.env.THUMB_ENABLED !== "0";
+const ENABLE_THUMBS = process.env.THUMB_ENABLED === "true";
 const CONCURRENCY = parseInt(process.env.THUMB_CONCURRENCY || "8", 10);
 const MAX_RETRIES = parseInt(process.env.THUMB_RETRIES || "2", 10);
 const RETRY_DELAY_MS = 500;
@@ -58,7 +58,7 @@ function getServerImages(filename) {
 
 async function generate() {
   if (!ENABLE_THUMBS) {
-    console.log("[thumbs] THUMB_ENABLED=0，跳过缩略图生成");
+    console.log("[thumbs] THUMB_ENABLED 未设为 true，跳过缩略图生成");
     return;
   }
 
