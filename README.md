@@ -115,6 +115,7 @@ echo "https://example.com/photo.jpg" >> images/horizontal.txt
 
 | 环境变量 | 说明 | 默认值 |
 |----------|------|--------|
+| `THUMB_ENABLED` | 是否生成缩略图（`0` 关闭） | 开启 |
 | `THUMB_CONCURRENCY` | 并发生成数 | `8` |
 | `THUMB_RETRIES` | 失败重试次数 | `2` |
 
